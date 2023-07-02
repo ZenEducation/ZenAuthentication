@@ -54,7 +54,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const toSignIn = () => {
-    router.push('/login')
+    router.push('/')
 }
 
 const form = ref({
