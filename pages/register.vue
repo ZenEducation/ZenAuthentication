@@ -5,7 +5,7 @@
 
 <script setup>
 const userEmail = ref('')
-const setEmail = () => {
+const setEmail = (email) => {
   userEmail.value = email
 }
 </script>

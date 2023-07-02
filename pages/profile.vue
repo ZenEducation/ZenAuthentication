@@ -4,19 +4,15 @@
 </template>
 
 <script setup>
+import { Auth } from "aws-amplify";
+
 definePageMeta({
     middleware: 'auth-check'
 })
 
 async function logout() {
     await Auth.signOut();
-    if (this.isAuthenticated === true) {
-        this.isAuthenticated = false;
-    }
+    navigateTo('/')
     localStorage.removeItem("authToken");
-    this.user = null;
-    if (!this.user) {
-        console.log("User successfully logged out");
-    }
 }
 </script>

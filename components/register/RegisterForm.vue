@@ -76,15 +76,15 @@ const register = async () => {
             username: form.value.email,
             password: form.value.password,
             attributes: {
-                name: form.value.fullName
+                name: form.value.fullName,
             },
         });
         if (user) {
-            emit("setEmail", form.signUpEmail)
+            emit("setEmail", form.value.email)
             return;
         }
     } catch (error) {
-        errorMsg.value.status = false;
+        errorMsg.value.status = true;
         errorMsg.value.message = error;
     }
 }

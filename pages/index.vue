@@ -45,6 +45,8 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { Auth } from "aws-amplify";
+
 const router = useRouter();
 
 const form = reactive({
@@ -65,7 +67,8 @@ const onSubmit = async () => {
       router.push("/profile");
     }
   } catch (error) {
-    errorMsg.value.status = false;
+    console.log(error)
+    errorMsg.value.status = true;
     errorMsg.value.message = error;
   }
 }
