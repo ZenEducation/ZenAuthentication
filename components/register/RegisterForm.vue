@@ -12,12 +12,13 @@
                 <div>
                     <label for="fullName" class="block text-sm font-medium leading-6 text-gray-900">Full Name</label>
                     <div class="mt-2">
-                        <input id="fullName" name="fullName" type="text" autocomplete="fullName" required v-model="form.fullName"
+                        <input id="fullName" name="fullName" type="text" autocomplete="fullName" required
+                            v-model="form.fullName"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
                 <div>
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900" >Email address</label>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                     <div class="mt-2">
                         <input id="email" name="email" type="email" autocomplete="email" required v-model="form.email"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -30,19 +31,22 @@
 
                     </div>
                     <div class="mt-2">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required v-model="form.password"
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                            v-model="form.password"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
-
+                <p class="text-[red]" v-if="errorMsg.status">{{ errorMsg.message }}</p>
                 <div>
-                    <button type="submit" class="bg-indigo-600 border px-6 py-2 text-white">Sign up</button>
+                    <button type="submit" class="bg-indigo-600 border px-6 py-2 text-white" @click.prevent="register">Sign
+                        up</button>
                 </div>
             </form>
 
             <p class="mt-10 text-center text-sm text-gray-500">
 
-                <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" @click="toSignIn">Sign
+                <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                    @click.prevent="toSignIn">Sign
                     in</a>
             </p>
         </div>
@@ -51,15 +55,37 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { Auth } from "aws-amplify";
+
+const emit = defineEmits(["setEmail"]);
+const errorMsg = ref({ status: false, message: '' });
 const router = useRouter();
 
 const toSignIn = () => {
     router.push('/')
 }
-
 const form = ref({
     fullName: '',
     email: '',
     password: '',
 })
+
+const register = async () => {
+    try {
+        const user = await Auth.signUp({
+            username: form.value.email,
+            password: form.value.password,
+            attributes: {
+                name: form.value.fullName
+            },
+        });
+        if (user) {
+            emit("setEmail", form.signUpEmail)
+            return;
+        }
+    } catch (error) {
+        errorMsg.value.status = false;
+        errorMsg.value.message = error;
+    }
+}
 </script>

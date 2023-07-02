@@ -16,9 +16,10 @@
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
-
+                <p class="text-[red]" v-if="errorMsg.status">{{ errorMsg.message }}</p>
                 <div>
-                    <button type="submit" class="bg-indigo-600 border px-6 py-2 text-white">Submit</button>
+                    <button type="submit" class="bg-indigo-600 border px-6 py-2 text-white"
+                        @click.prevent="onSubmit">Submit</button>
                 </div>
             </form>
 
@@ -30,8 +31,28 @@
 <script setup>
 import { useRouter } from "vue-router";
 const router = useRouter();
+const props = defineProps({
+    email: {
+        type: String,
+        default: null,
+    }
+})
 
-const toSignIn = () => {
-    router.push('/login')
+const form = reactive({
+    otp: "",
+});
+
+const errorMsg = ref({ status: false, message: '' });
+
+const onSubmit = async () => {
+    try {
+        const user = await Auth.confirmSignUp(email, code);
+        if (user) {
+            router.push("/");
+        }
+    } catch (error) {
+        errorMsg.value.status = false;
+        errorMsg.value.message = error;
+    }
 }
 </script>
