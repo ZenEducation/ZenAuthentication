@@ -32,8 +32,9 @@
         <div>
           <button type="submit" class="bg-indigo-600 border px-6 py-2 text-white" @click.prevent="onSubmit">Sign
             in</button>
-        </div>
-      </form>
+          </div>
+        </form>
+        <button class="bg-indigo-600 border px-6 py-2 my-2 text-white" @click="() => Auth.federatedSignIn({ provider: 'Google' })">Login with Google</button>
 
       <p class="mt-10 text-center text-sm text-gray-500">
 
@@ -55,6 +56,12 @@ const form = reactive({
   password: "",
 });
 
+const getSession = () => {
+    Auth.currentSession().then(() => navigateTo('/profile'))
+}
+onMounted(() => {
+    getSession()
+})
 const errorMsg = ref({ status: false, message: '' });
 
 const onSubmit = async () => {
